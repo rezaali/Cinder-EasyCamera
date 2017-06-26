@@ -1,4 +1,4 @@
-#include "..\include\EasyCamera.h"
+#include "EasyCamera.h"
 
 using namespace ci;
 using namespace ci::app;
