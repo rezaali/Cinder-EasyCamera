@@ -6,8 +6,8 @@ using namespace ci::app;
 namespace reza {
 namespace cam {
 
-EasyCamera::EasyCamera( const ci::app::WindowRef &window )
-	: mWindowRef( window )
+EasyCamera::EasyCamera( const ci::app::WindowRef &window, Format format )
+	: mWindowRef( window ), mFormat( format )
 {
 }
 
@@ -17,26 +17,23 @@ EasyCamera::~EasyCamera()
 
 void EasyCamera::setup()
 {
-	mFov = 60.0f;
-	mNearClip = 0.10f;
-	mFarClip = 10000.0f;
 	mCam.setWorldUp( vec3( 0.0f, 1.0f, 0.0f ) );
 	update();
-	mCam.lookAt( vec3( 0.0f, 0.0f, mCamDistance ), vec3( 0.0f, 0.0f, 0.0f ) );
+	mCam.lookAt( vec3( 0.0f, 0.0f, mFormat.mCamDistance ), vec3( 0.0f, 0.0f, 0.0f ) );
 	mMayaCam.setCamera( &mCam );
 }
 
 void EasyCamera::update()
 {
 	if( mWindowRef ) {
-		mCam.setPerspective( mFov, mWindowRef->getAspectRatio(), mNearClip, mFarClip );
+		mCam.setPerspective( mFormat.mFov, mWindowRef->getAspectRatio(), mFormat.mNearClip, mFormat.mFarClip );
 	}
 }
 
 void EasyCamera::enable()
 {
 	mCameraMouseDownCb = mWindowRef->getSignalMouseDown().connect( [this]( MouseEvent event ) {
-		if( ( ( getElapsedSeconds() - mLastClick ) < mDoubleClickThreshold ) && !event.isMetaDown() ) {
+		if( ( ( getElapsedSeconds() - mLastClick ) < mFormat.mDoubleClickThreshold ) && !event.isMetaDown() ) {
 			setup();
 		}
 		mLastClick = static_cast<float>( getElapsedSeconds() );

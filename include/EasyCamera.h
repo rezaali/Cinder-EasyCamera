@@ -32,9 +32,61 @@ namespace cam {
 typedef std::shared_ptr<class EasyCamera> EasyCameraRef;
 class EasyCamera {
   public:
-	static EasyCameraRef create( const ci::app::WindowRef &window = ci::app::getWindow() )
+    struct Format {
+    public:
+        Format() {
+            mFov = 60.0f;
+            mCamDistance = 4.0f;
+            mNearClip = 0.10f;
+            mFarClip = 1000.0f;
+            mDoubleClickThreshold = 0.2f;
+        }
+        Format( const Format &copy )
+        {
+            mFov = copy.mFov;
+            mCamDistance = copy.mCamDistance;
+            mNearClip = copy.mNearClip;
+            mFarClip = copy.mFarClip;
+            mDoubleClickThreshold = copy.mDoubleClickThreshold;
+        }
+        Format &fov( float fov )
+        {
+            mFov = fov;
+            return *this;
+        }
+        Format &distance( float distance )
+        {
+            mCamDistance = distance;
+            return *this;
+        }
+        Format &near( float near )
+        {
+            mNearClip = near;
+            return *this;
+        }
+        Format &far( float far )
+        {
+            mFarClip = far;
+            return *this;
+        }
+        Format &clickThreshold( float clickThreshold )
+        {
+            mDoubleClickThreshold = clickThreshold;
+            return *this;
+        }
+        
+    protected:
+        float mFov = 60.0f;
+        float mCamDistance = 4.0f;
+        float mNearClip = 0.10f;
+        float mFarClip = 1000.0f;
+        float mDoubleClickThreshold = 0.2f;
+        friend class EasyCamera;
+    };
+    
+	static EasyCameraRef create( const ci::app::WindowRef &window = ci::app::getWindow(), Format format = Format() )
 	{
-		return EasyCameraRef( new EasyCamera( window ) );
+		return EasyCameraRef( new EasyCamera( window, format ) );
 	}
 	virtual ~EasyCamera();
 
@@ -50,20 +102,16 @@ class EasyCamera {
 
 	float &getFov()
 	{
-		return mFov;
+		return mFormat.mFov;
 	}
 
   protected:
-	EasyCamera( const ci::app::WindowRef &window );
+	EasyCamera( const ci::app::WindowRef &window, Format format = Format() );
 
 	ci::app::WindowRef mWindowRef = nullptr;
 	ci::CameraPersp mCam;
 	ci::CameraUi mMayaCam;
-	float mFov = 60.0f;
-	float mCamDistance = 4.0f;
-	float mNearClip = 0.10f;
-	float mFarClip = 1000.0f;
-	float mDoubleClickThreshold = 0.2f;
+    Format mFormat;
 	float mLastClick = -1.0f;
 	ci::signals::ScopedConnection mCameraMouseDownCb, mCameraMouseDragCb;
 };
