@@ -104,6 +104,11 @@ class EasyCamera {
 	{
 		return mFormat.mFov;
 	}
+    
+    float *getFovPtr()
+    {
+        return &mFormat.mFov;
+    }
 
   protected:
 	EasyCamera( const ci::app::WindowRef &window, Format format = Format() );
