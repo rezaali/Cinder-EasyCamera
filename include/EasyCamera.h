@@ -41,6 +41,7 @@ class EasyCamera {
             mFarClip = 1000.0f;
             mDoubleClickThreshold = 0.2f;
         }
+
         Format( const Format &copy )
         {
             mFov = copy.mFov;
@@ -49,24 +50,28 @@ class EasyCamera {
             mFarClip = copy.mFarClip;
             mDoubleClickThreshold = copy.mDoubleClickThreshold;
         }
+
         Format &fov( float fov )
         {
             mFov = fov;
             return *this;
         }
+
         Format &distance( float distance )
         {
             mCamDistance = distance;
             return *this;
         }
-        Format &near( float near )
-        {
-            mNearClip = near;
+
+        Format &nearClip( float nearClip )
+		{
+			mNearClip = nearClip;
             return *this;
         }
-        Format &far( float far )
+
+        Format &farClip( float farClip )
         {
-            mFarClip = far;
+			mFarClip = farClip;
             return *this;
         }
         Format &clickThreshold( float clickThreshold )
